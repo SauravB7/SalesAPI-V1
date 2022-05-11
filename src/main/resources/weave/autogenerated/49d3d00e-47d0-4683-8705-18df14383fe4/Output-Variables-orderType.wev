@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_49d3d00e_47d0_4683_8705_18df14383fe4_Output_Variables_orderType = Any
+

@@ -1,0 +1,39 @@
+{
+    "orders": [{
+            "orderId": "ORD124125",
+            "customerId": "CTM1249074",
+            "orderStatus": "Shipped",
+            "purchaseTimestamp": "02-10-2017 10:56",
+            "approvedAt": "02-10-2017 10:56",
+            "deliveredCarrierDate": "02-10-2017 10:56",
+            "deliveredCustomerDate": "02-10-2017 10:56",
+            "estimatedDelivery": "02-10-2017 10:56",
+            "orderItems": [{
+                    "itemId": "8d4f2bb7e93e6710a28f34fa83ee7d28",
+                    "quantity": 2,
+                    "pricePerItem": 40,
+                    "frieghtValue": 12,
+                    "sellerId": "7040e82f899a04d1b434b795a43b4617",
+                    "shippingLimitDate": "4/27/2022"
+                }, {
+                    "itemId": "557d850972a7d6f792fd18ae1400d9b6",
+                    "quantity": 5,
+                    "pricePerItem": 267.80,
+                    "frieghtValue": 19,
+                    "sellerId": "	5996cddab893a4652a15592fb58ab8db",
+                    "shippingLimitDate": "4/27/2022"
+                }
+            ],
+            "orderValue": {
+                "totalItemValue": 1419,
+                "totalFreightValue": 119,
+                "totalOrderValue": 1538
+            },
+            "commissionDetails": {
+                "regionCd": "ASIA",
+                "orderValue": 1538,
+                "commissionValue": 153.80
+            }
+        }
+    ]
+}

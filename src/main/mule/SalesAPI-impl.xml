@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<flow name="get:\orders:SalesAPI-config">
+		<flow-ref doc:name="RetrieveOrders_Flow" doc:id="94ca0b5f-c4b0-4eaa-afb0-da3f9c2fcf38" name="RetrieveOrders_Flow"/>
+    
+</flow>
+    <flow name="post:\orders:application\json:SalesAPI-config">
+		<flow-ref doc:name="CreateOrders_Flow" doc:id="fbc6a5db-a265-4d02-9735-ea4bc151831f" name="CreateOrders_Flow"/>
+
+    </flow>
+</mule>

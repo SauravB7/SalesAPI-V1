@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="CreateOrders_Flow" doc:id="dc8d9d17-61b1-45f0-a205-dee79bef8d9d" >
+		<set-variable value="#[payload]" doc:name="originalPayload" doc:id="38f4a1d7-6c3d-4e69-97df-b863612df56e" variableName="originalPayload"/>
+		<ee:transform doc:name="Capture Client Headers" doc:id="52d1e09a-99cd-4881-9ff4-8234818d1a00" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dataweaves/CaptureClientHeaders.dwl" variableName="clientHeaders" />
+			</ee:variables>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="1f88c921-217b-4416-811c-55272870f866" >
+			<route >
+				<set-variable value="#[p('orderType.online')]" doc:name="Set orderType as Online" doc:id="8a1437bb-27e7-4246-9292-98956e81e997" variableName="orderType"/>
+				<set-payload value="#[output application/json&#10;---&#10;payload.orders filter ((order, indexOfOrder) -&gt; upper(order.orderType) == upper(vars.orderType))]" doc:name="Set Online Orders" doc:id="71bd5873-a0f7-4003-a3c3-d3958f064cf2" />
+				<flow-ref doc:name="InsertOrders_Subflow" doc:id="df330424-2a6f-44b5-8ddd-9b01e113cf59" name="InsertOrders_Subflow" />
+			</route>
+			<route >
+				<set-variable value="#[p('orderType.offline')]" doc:name="Set orderType as Offline" doc:id="c7de2a89-14c1-4ec6-b362-c2abbf8c3dc6" variableName="orderType"/>
+				<set-payload value="#[output application/json&#10;---&#10;payload.orders filter ((order, indexOfOrder) -&gt; upper(order.orderType) == upper(vars.orderType))]" doc:name="Set Offline Orders" doc:id="ae727577-c996-4ffa-a8ab-3999f624612f" />
+				<flow-ref doc:name="InsertOrders_Subflow" doc:id="0540d76c-7d41-4761-aaf0-a8d4c06c5e1a" name="InsertOrders_Subflow"/>
+			</route>
+		</scatter-gather>
+		<logger level="DEBUG" doc:name="Orders Inserted Successfully" doc:id="51ad6272-13a5-4450-beb0-804c44da4cd1" message="Orders Inserted Successfully"/>
+		<flow-ref doc:name="InsertOrderItems_SubFlow" doc:id="e1336cf7-80a4-486c-adf8-fc46a00800ac" name="InsertOrderItems_SubFlow"/>
+		<flow-ref doc:name="InsertCommissions_SubFlow" doc:id="4f668b75-5baa-4b73-ad41-c9e183618c42" name="InsertCommissions_SubFlow"/>
+		<set-payload value='#[""]' doc:name="Set Payload" doc:id="986c4f54-78fa-44d8-bf92-d9ef08377a1b" />
+	</flow>
+	<sub-flow name="InsertOrders_Subflow" doc:id="49d3d00e-47d0-4683-8705-18df14383fe4">
+		<ee:transform doc:name="Insert Order Request Transformation" doc:id="a62160b9-ca1a-45dc-855a-f17e3b0beeb3">
+			<ee:message>
+				<ee:set-payload resource="dataweaves/InsertOrderRequestTransform.dwl" />
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="4c9d51a0-aeb4-440e-b432-8b9b396d3b6a">
+			<when expression="#[not isEmpty(payload)]">
+				<http:request method="POST" doc:name="Call SalesDBSysAPI to Insert Orders" doc:id="54809abb-dff0-445e-9158-7c9919658bfd" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.orderPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"orderType" : vars.orderType
+}]]]></http:query-params>
+		</http:request>
+			</when>
+			<otherwise>
+				<logger level="DEBUG" doc:name="Logger" doc:id="bae6f56b-42b7-4aee-8b11-1c4774b24643" message='#["No orders for following orderType to insert into Db. OrderType: " ++ vars.orderType as String]' />
+				<set-payload value='#[""]' doc:name="Set Payload" doc:id="9b924c23-e3fe-4948-aa00-9ca47bb8c4b9" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="InsertOrderItems_SubFlow" doc:id="726ff8c9-afd0-4a93-955b-dc425a85518e" >
+		<ee:transform doc:name="Insert Order Items Request Transformation" doc:id="8506d4f4-6f95-472f-a8b0-03f18d72c3b7" >
+			<ee:message >
+				<ee:set-payload resource="dataweaves/InsertOrderItemsRequestTransformation.dwl" />
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Remove Order With No Items" doc:id="505fdf61-5be5-4247-bbd2-f5f58aabb0bd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	orderItems: payload.orderItems filter() -> (not isEmpty($.items))
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="fe5caac8-33d1-4f61-95e7-388cb19c256f" >
+			<when expression="#[not isEmpty(payload.orderItems)]">
+				<http:request method="POST" doc:name="Call SalesDBSysAPI to Insert Orders Items" doc:id="89186baa-5bab-44e8-a1af-8c9e8e6465d5" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.orderItemsPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+		</http:request>
+				<logger level="DEBUG" doc:name="OrderItems Inserted Successfully" doc:id="6aac3d7a-b726-40b7-91ff-549a2c77bf24" message="OrderItems Inserted Successfully" />
+			</when>
+			<otherwise >
+				<logger level="DEBUG" doc:name="No Items to Insert" doc:id="34b90897-eae5-4def-a51e-a16c43464249" message="No Items to Insert"/>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="InsertCommissions_SubFlow" doc:id="ea97c139-c250-421b-a629-14ea2f870115" >
+		<ee:transform doc:name="Insert Commissions Request Tramsformation" doc:id="a1704ed5-48aa-4686-899f-d8635dcb5ad1" >
+			<ee:message >
+				<ee:set-payload resource="dataweaves/InsertCommissionsRequestTranformation.dwl" />
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="Call SalesDBSysAPI to Insert Commissions" doc:id="6de673d0-f97a-4d04-8774-2c933e033500" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.commissionsPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+		</http:request>
+		<logger level="DEBUG" doc:name="Commissions Inserted Successfully" doc:id="5ffdc555-732f-4938-83df-46f1f565c877" message="Commissions Inserted Successfully"/>
+	</sub-flow>
+</mule>

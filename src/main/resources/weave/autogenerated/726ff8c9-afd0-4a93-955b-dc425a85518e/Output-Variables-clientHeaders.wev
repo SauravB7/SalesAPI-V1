@@ -1,0 +1,7 @@
+%dw 2.0
+
+type auto_726ff8c9_afd0_4a93_955b_dc425a85518e_Output_Variables_clientHeaders = {|
+  id: String, 
+  secret: String
+|}
+

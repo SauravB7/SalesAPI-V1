@@ -1,0 +1,73 @@
+%dw 2.0
+
+type auto_726ff8c9_afd0_4a93_955b_dc425a85518e_Input_Payload = {|
+  "0": org_mule_runtime_api_message_Message, 
+  "1": org_mule_runtime_api_message_Message_33
+|}
+type org_mule_runtime_api_message_Message_33 = {|
+  payload: anonymousType_0, 
+  attributes: anonymousType_13
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+type anonymousType_0 = {|
+  orders: Array<{|    orderId: String,     customerId: String,     orderStatus: String,     purchaseTimestamp: String,     approvedAt: String,     deliveredCarrierDate: String,     deliveredCustomerDate: String,     estimatedDelivery: String,     orderValue: Number,     regionCd: String  |}>
+|}
+
+
+type anonymousType_13 = {|
+  clientCertificate?: {|
+    publicKey?: {|  |}, 
+    "type"?: String, 
+    encoded?: Binary
+  |}, 
+  headers: {|
+    client_id: String, 
+    client_secret: String
+  |}, 
+  listenerPath: String, 
+  method: String, 
+  queryParams: {|  |}, 
+  queryString: String, 
+  relativePath: String, 
+  remoteAddress: String, 
+  requestPath: String, 
+  requestUri: String, 
+  scheme: String, 
+  uriParams: {|  |}, 
+  version: String, 
+  localAddress: String
+|}
+
+
+
+
+type org_mule_runtime_api_message_Message = {|
+  payload: {|
+    orders: Array<{|      orderId: String,       customerId: String,       orderStatus: String,       purchaseTimestamp: String,       approvedAt: String,       deliveredCarrierDate: String,       deliveredCustomerDate: String,       estimatedDelivery: String,       orderValue: Number,       regionCd: String    |}>
+  |}, 
+  attributes: {|
+    clientCertificate?: {|
+      publicKey?: {|  |}, 
+      "type"?: String, 
+      encoded?: Binary
+    |}, 
+    headers: {|
+      client_id: String, 
+      client_secret: String
+    |}, 
+    listenerPath: String, 
+    method: String, 
+    queryParams: {|  |}, 
+    queryString: String, 
+    relativePath: String, 
+    remoteAddress: String, 
+    requestPath: String, 
+    requestUri: String, 
+    scheme: String, 
+    uriParams: {|  |}, 
+    version: String, 
+    localAddress: String
+  |}
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+
+
+

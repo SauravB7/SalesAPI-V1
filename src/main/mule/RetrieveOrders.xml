@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="RetrieveOrders_Flow" doc:id="2ba492ad-5b0c-415c-9796-dc7b5232623f" >
+		<ee:transform doc:name="Capture Client Headers" doc:id="d9ba82d3-8c03-4d80-9ca2-6c9ab5b046bd" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dataweaves/CaptureClientHeaders.dwl" variableName="clientHeaders" />
+			</ee:variables>
+		</ee:transform>
+		<set-variable value='#[attributes.queryParams.orderIds splitBy ","]' doc:name="orderIDs" doc:id="035d50a4-8563-4c44-a0dc-3c04d2d512b4" variableName="orderIDs"/>
+		<set-variable value="#[attributes.queryParams.orderType]" doc:name="orderType" doc:id="83572c95-ac02-4e3f-a565-a8c613e6f593" variableName="orderType"/>
+		<parallel-foreach doc:name="Parallel For Each" doc:id="889c3f25-e905-4880-bac1-2c702eea2e96" collection="#[vars.orderIDs]" maxConcurrency="5">
+			<flow-ref doc:name="RetrieveOrdersByOrderId_SubFlow" doc:id="563c3a60-c214-483c-889b-c17ef3b7e1a1" name="RetrieveOrdersByOrderId_SubFlow" target="orderDetails"/>
+			<choice doc:name="Choice" doc:id="236131fa-5054-4d1e-8710-851244f4032e" >
+				<when expression="#[(not isEmpty(vars.orderDetails.transactionNotification.transactionCode)) and (vars.orderDetails.transactionNotification.transactionCode == 'E')]">
+					<logger level="DEBUG" doc:name="Order details not present in DB" doc:id="e246b2ba-27ec-44fc-9936-f2d3f3cf5272" message="Order details not present in DB" />
+					<ee:transform doc:name="Order Not Present Response Transformation" doc:id="63ba76a2-d6f6-45ce-8037-b4d51050c426" >
+						<ee:message >
+							<ee:set-payload resource="dataweaves/OrderDetailsNotPresentTransformation.dwl" />
+						</ee:message>
+					</ee:transform>
+				</when>
+				<otherwise >
+					<flow-ref doc:name="RetrieveOrderItemsByOrderId_SubFlow" doc:id="55c54383-b6ec-48c1-b8e9-a4bb4921a9ae" name="RetrieveOrderItemsByOrderId_SubFlow" target="orderItems"/>
+					<flow-ref doc:name="RetrieveCommissionByOrderId_SubFlow" doc:id="182ab770-2619-43e2-a53b-068b51e7d59c" name="RetrieveCommissionByOrderId_SubFlow" target="commissionDetails"/>
+					<ee:transform doc:name="Response Transformation" doc:id="ade18ba0-ba7c-463a-b38f-557f9d8dd575" >
+						<ee:message >
+							<ee:set-payload resource="dataweaves/RetrieveOrderResponseTransformation.dwl" />
+						</ee:message>
+					</ee:transform>
+				</otherwise>
+			</choice>
+		</parallel-foreach>
+		<ee:transform doc:name="Final Response Transformation" doc:id="3a4f616a-795d-4c25-b479-e4818ce756aa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	orders: payload.*typedValue
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="0d1389f1-e5fb-4964-b1c8-c38041a90ef8" />
+	</flow>
+	<sub-flow name="RetrieveOrdersByOrderId_SubFlow" doc:id="f5539fb4-8875-4a35-9e36-07d0bbe48cd5">
+		<http:request method="GET" doc:name="Call SalesDBSysAPI to Retrieve Order Details" doc:id="bfec0049-780d-448f-8413-ddf3523fb527" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.retrieveOrderPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[{
+	orderId: payload
+}]]]></http:uri-params>
+			<http:query-params ><![CDATA[#[{
+	operation: "retrieveOrder",
+	orderType: vars.orderType
+}]]]></http:query-params>
+			<http:response-validator >
+				<http:success-status-code-validator values="200..599" />
+			</http:response-validator>
+		
+	</http:request>
+	</sub-flow>
+	
+	<sub-flow name="RetrieveOrderItemsByOrderId_SubFlow" doc:id="f4c5ba1f-3def-46f9-96e6-68194f5b388a">
+		<http:request method="GET" doc:name="Call SalesDBSysAPI to Retrieve Item Details" doc:id="adae89c9-5600-487d-92e7-1b9987d6cc59" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.retrieveOrderPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[{
+	orderId: payload
+}]]]></http:uri-params>
+			<http:query-params ><![CDATA[#[{
+	operation: "retrieveItems"
+}]]]></http:query-params>
+			<http:response-validator >
+				<http:success-status-code-validator values="200..599" />
+			</http:response-validator>
+		
+	</http:request>
+	</sub-flow>
+	<sub-flow name="RetrieveCommissionByOrderId_SubFlow" doc:id="b7ac0fc5-6d62-4f7e-9fd3-0230a6fdc14e">
+		<http:request method="GET" doc:name="Call SalesDBSysAPI to Retrieve Commission Details" doc:id="3742d6d9-b4be-4c61-9df5-3ba920f8174d" config-ref="SalesDBSysAPI_HTTP_Request_Configuration" path="${salesdbsysapi.retrieveOrderPath}">
+			<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_id" : vars.clientHeaders.id,
+	"client_secret": vars.clientHeaders.secret
+}]]]></http:headers>
+			<http:uri-params ><![CDATA[#[{
+	orderId: payload
+}]]]></http:uri-params>
+			<http:query-params ><![CDATA[#[{
+	operation: "retrieveCommission"
+}]]]></http:query-params>
+			<http:response-validator >
+				<http:success-status-code-validator values="200..599" />
+			</http:response-validator>
+		
+	</http:request>
+	</sub-flow>
+</mule>

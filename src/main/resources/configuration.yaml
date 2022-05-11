@@ -1,0 +1,26 @@
+api:
+  name: "SalesAPI"
+  version: "V1"
+  host: "0.0.0.0"
+  port: "8091"
+  path: "/salesms/v1/*"
+  console: "/salesms/v1/console"
+  listener_timeout: "30000"
+  id: "17801830"
+  
+salesdbsysapi:
+  host: "192.168.15.10"
+  port: "8091"
+  basepath: "/salesdbms/v1"
+  connectiontimeout: "30000"
+  responsetimeout: "30000"
+  orderPath: "/orders"
+  orderItemsPath: "/orderItems"
+  commissionsPath: "/commissions"
+  retrieveOrderPath: "/order/{orderId}"
+  
+commissions: "profit=APAC:17,EU:15,MENA:10,OTH:12; revenue=LAC:7"
+
+orderType:
+  online: "online"
+  offline: "offline"

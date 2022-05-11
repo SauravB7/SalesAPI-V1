@@ -1,0 +1,79 @@
+responses:
+  400:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-400",
+              "messageText": "Bad Request."
+            }]
+          }
+        }
+  401:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-401",
+              "messageText": "Unauthorized Access."
+            }]
+          }
+        }
+  404:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-404",
+              "messageText": "Resource Not Found."
+            }]
+          }
+        }
+  415:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-415",
+              "messageText": "Unsupported Media Type."
+            }]
+          }
+        }
+  500:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-500",
+              "messageText": "Internal Server Error."
+            }]
+          }
+        }
+  504:
+    body:
+      application/json:
+        example: {
+          "transactionNotification": {
+            "transactionCode": "E",
+            "transactionStatus": "Error",
+            "remarks": [{
+              "messageCode": "UAP-APP-504",
+              "messageText": "Network Timed Out."
+            }]
+          }
+        }

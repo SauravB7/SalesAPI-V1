@@ -1,0 +1,33 @@
+{
+    "orders": [{
+            "orderId": "00063b381e2406b52ad429470734ebd5",
+            "customerId": "41ce2a54c0b03bf3443c3d931a367089",
+            "orderStatus": "Shipped",
+            "purchaseTimestamp": "08-08-2018 08:38:49",
+            "approvedAt": "08-08-2018 08:55:23",
+            "deliveredCarrierDate": "08-08-2018",
+            "deliveredCustomerDate": "08-17-2018",
+            "estimatedDelivery": "09-04-2018",
+            "regionCd": "ASIA",
+            "orderType": "Online",
+            "orderItems": [{
+                    "itemId": "8d4f2bb7e93e6710a28f34fa83ee7d28",
+                    "quantity": 2,
+                    "pricePerItem": 40,
+                    "frieghtValue": 12,
+                    "productValue": 20,
+                    "sellerId": "7040e82f899a04d1b434b795a43b4617",
+                    "shippingLimitDate": "4-27-2022"
+                }, {
+                    "itemId": "557d850972a7d6f792fd18ae1400d9b6",
+                    "quantity": 5,
+                    "pricePerItem": 267.80,
+                    "frieghtValue": 19,
+                    "productValue": 190,
+                    "sellerId": "	5996cddab893a4652a15592fb58ab8db",
+                    "shippingLimitDate": "4-27-2022"
+                }
+            ]
+        }
+    ]
+}

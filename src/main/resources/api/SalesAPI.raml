@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: SalesAPI
+version: V1
+
+traits:
+  securedByClientId: !include traits/SecuredByClientID.yml
+  standardErrors: !include traits/StandardErrors.yml
+
+/orders:
+  description: Insert Multiple Orders to Database
+  post:
+    displayName: Create Orders
+    description: Insert Multiple Orders to Database
+    is: [securedByClientId, standardErrors]
+    body:
+      application/json:
+        example: !include examples/InsertOrdersRequest.json
+  get:
+    displayName: Retrieve Orders
+    description: Retrieve Orders Order Id
+    is: [securedByClientId, standardErrors]
+    queryParameters:
+      orderIds:
+        type: string
+        required: true
+      orderType:
+        enum: [online, offline]
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+            examples: 
+              retrieveOrder: !include examples/RetrieveOrdersResponse.json

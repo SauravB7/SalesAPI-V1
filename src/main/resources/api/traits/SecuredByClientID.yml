@@ -1,0 +1,9 @@
+headers:
+  client_id:
+    description: Client ID Provided for the Application
+    type: string
+    required: true
+  client_secret:
+    description: Client Secret Provided for the Application
+    type: string
+    required: true
