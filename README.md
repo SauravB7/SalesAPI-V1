@@ -35,3 +35,6 @@ To create a deployable package from your configured Project, run the following M
 ```
 mvn clean package
 ```
+
+### Mock Service and Exchange Doc
+Mock Service is RAML is published in the Exchange: [***SalesAPI-V1 Exchange***](https://anypoint.mulesoft.com/exchange/portals/test-4779/64efc3bc-f2ea-4c4d-9159-51c6597ce859/salesapi/)
