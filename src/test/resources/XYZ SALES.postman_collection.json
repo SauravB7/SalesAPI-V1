@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "7ed05ba4-859d-4351-a7ef-87ff85c486ac",
+		"name": "XYZ SALES",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SalesDBSysAPI-V1",
+			"item": [
+				{
+					"name": "Retrieve Order Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:8092/salesdbms/v1/order/{{orderId}}?operation=retrieveOrder&orderType=online",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8092",
+							"path": [
+								"salesdbms",
+								"v1",
+								"order",
+								"{{orderId}}"
+							],
+							"query": [
+								{
+									"key": "operation",
+									"value": "retrieveOrder"
+								},
+								{
+									"key": "orderType",
+									"value": "online"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Order Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:8092/salesdbms/v1/order/{{orderId}}?operation=retrieveItems",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8092",
+							"path": [
+								"salesdbms",
+								"v1",
+								"order",
+								"{{orderId}}"
+							],
+							"query": [
+								{
+									"key": "operation",
+									"value": "retrieveItems"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Commission Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:8091/salesdbms/v1/order/{{orderId}}?operation=retrieveCommission",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8091",
+							"path": [
+								"salesdbms",
+								"v1",
+								"order",
+								"{{orderId}}"
+							],
+							"query": [
+								{
+									"key": "operation",
+									"value": "retrieveCommission"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Commissions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"commissions\": [\r\n        {\r\n            \"orderId\": \"53cdb2fc8bc7dce0b6741e2150273453\",\r\n            \"regionCd\": \"APAC\",\r\n            \"orderValue\": 1200,\r\n            \"commissionAmount\": 180\r\n        },\r\n        {\r\n            \"orderId\": \"53cdb2fc8bc7dce0b6741e2150273452\",\r\n            \"regionCd\": \"APAC\",\r\n            \"orderValue\": 1000,\r\n            \"commissionAmount\": 120\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:8091/salesdbms/v1/commissions",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8091",
+							"path": [
+								"salesdbms",
+								"v1",
+								"commissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Order Items",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderItems\": [\r\n        {\r\n            \"orderId\": \"e481f51cbdc54678b7cc49136f2d6af7\",\r\n            \"items\": [\r\n                {\r\n                    \"productId\": \"4244733e06e7ecb4970a6e2683c13e61\",\r\n                    \"itemQty\": 2,\r\n                    \"sellerId\": \"48436dade18ac8b2bce089ec2a041202\",\r\n                    \"shippingLimitDate\": \"05/24/2022\",\r\n                    \"pricePerItem\": 45,\r\n                    \"freightValue\": 12\r\n                },\r\n                {\r\n                    \"productId\": \"e5f2d52b802189ee658865ca93d83a8f\",\r\n                    \"itemQty\": 2,\r\n                    \"sellerId\": \"48436dade18ac8b2bce089ec2a041202\",\r\n                    \"shippingLimitDate\": \"05/24/2022\",\r\n                    \"pricePerItem\": 67,\r\n                    \"freightValue\": 13\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:8092/salesdbms/v1/orderItems",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8092",
+							"path": [
+								"salesdbms",
+								"v1",
+								"orderItems"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orders\": [\r\n        {\r\n            \"orderId\": \"47770eb9100c2d0c44946d9cf07ec650\",\r\n            \"customerId\": \"41ce2a54c0b03bf3443c3d931a367089\",\r\n            \"orderStatus\": \"Shipped\",\r\n            \"purchaseTimestamp\": \"08-08-2018 08:38:49\",\r\n            \"approvedAt\": \"08-08-2018 08:55:23\",\r\n            \"deliveredCarrierDate\": \"08-08-2018\",\r\n            \"deliveredCustomerDate\": \"08-17-2018\",\r\n            \"estimatedDelivery\": \"09-04-2018\",\r\n            \"orderValue\": 145.45,\r\n            \"regionCd\": \"ASIA\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:8092/salesdbms/v1/orders?orderType=offline",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8092",
+							"path": [
+								"salesdbms",
+								"v1",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderType",
+									"value": "offline"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SalesAPI-V1",
+			"item": [
+				{
+					"name": "Insert Orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orders\": [{\r\n            \"orderId\": \"00063b381e2406b52ad429470734ebd5\",\r\n            \"customerId\": \"41ce2a54c0b03bf3443c3d931a367089\",\r\n            \"orderStatus\": \"Shipped\",\r\n            \"purchaseTimestamp\": \"08-08-2018 08:38:49\",\r\n            \"approvedAt\": \"08-08-2018 08:55:23\",\r\n            \"deliveredCarrierDate\": \"08-08-2018\",\r\n            \"deliveredCustomerDate\": \"08-17-2018\",\r\n            \"estimatedDelivery\": \"09-04-2018\",\r\n            \"regionCd\": \"ASIA\",\r\n            \"orderType\": \"Online\",\r\n            \"orderItems\": [{\r\n                    \"itemId\": \"8d4f2bb7e93e6710a28f34fa83ee7d28\",\r\n                    \"quantity\": 2,\r\n                    \"pricePerItem\": 40,\r\n                    \"frieghtValue\": 12,\r\n                    \"productValue\": 20,\r\n                    \"sellerId\": \"7040e82f899a04d1b434b795a43b4617\",\r\n                    \"shippingLimitDate\": \"4-27-2022\"\r\n                }, {\r\n                    \"itemId\": \"557d850972a7d6f792fd18ae1400d9b6\",\r\n                    \"quantity\": 5,\r\n                    \"pricePerItem\": 267.80,\r\n                    \"frieghtValue\": 19,\r\n                    \"productValue\": 190,\r\n                    \"sellerId\": \"5996cddab893a4652a15592fb58ab8db\",\r\n                    \"shippingLimitDate\": \"4-27-2022\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:8091/salesms/v1/orders",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8091",
+							"path": [
+								"salesms",
+								"v1",
+								"orders"
+							]
+						},
+						"description": "Use the Post method with order details to retrieve Order Details alongside items present in order and commission."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Order Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}:8091/salesms/v1/orders?orderIds=0009792311464db532ff765bf7b182ae&orderType=online",
+							"host": [
+								"{{host}}"
+							],
+							"port": "8091",
+							"path": [
+								"salesms",
+								"v1",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "orderIds",
+									"value": "0009792311464db532ff765bf7b182ae"
+								},
+								{
+									"key": "orderType",
+									"value": "online"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "SalesAPI-V1 is used to insert and retrieve order details to Sales DB in near real time.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "orderId",
+			"value": "e481f51cbdc54678b7cc49136f2d6af7",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "http://192.168.15.10",
+			"type": "string"
+		},
+		{
+			"key": "client_id",
+			"value": "0696251c89834826b08ae65aa609d2f7",
+			"type": "string"
+		},
+		{
+			"key": "client_secret",
+			"value": "5E6B9f7a911e48749Ae25260868341eF",
+			"type": "string"
+		}
+	]
+}
