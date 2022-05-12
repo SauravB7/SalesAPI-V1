@@ -1,8 +1,8 @@
 # SalesAPI-V1
 
 ### Setting Up Listener for the Project
-* Use the following Domain project to run this repository - [SDHTTPListener](https://github.com/SauravB7/SDHTTPListener)
-* Or, uncomment the following line in the ***src/main/mule/SalesAPI-main.xml***
+* Use the following Domain project to run this repository - [**SDHTTPListener**](https://github.com/SauravB7/SDHTTPListener)
+* Or, uncomment the following line in the [***SalesAPI-main.xml***](./src/main/mule/SalesAPI-main.xml)
     ```
     <http:listener-config name="SDHTTP_Listener_config">
         <http:listener-connection host="${api.host}" port="${api.port}" readTimeout="${api.listener_timeout}" connectionIdleTimeout="${api.listener_timeout}"/>
@@ -20,7 +20,7 @@
     ```
 
 ### Setting Up SystemAPI Config for the Project
-Update the following parameters with your SystemAPI configs in ***src/main/resources/configuration.yaml***. Update the host and port where you are hosting the [**SalesDBSysAPI-V1**](https://github.com/SauravB7/SalesDBSysAPI-V1)
+Update the following parameters with your SystemAPI configs in [***configuration.yaml***](./src/main/resources/configuration.yaml). Update the host and port where you are hosting the [**SalesDBSysAPI-V1**](https://github.com/SauravB7/SalesDBSysAPI-V1)
 ```
 salesdbsysapi:
   host: "192.168.15.10"
